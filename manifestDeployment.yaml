@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-adminator
+spec:
+  selector:
+    matchLabels:
+      app: flask
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask-adminator
+        image: captnbill/eval-adminator:beta

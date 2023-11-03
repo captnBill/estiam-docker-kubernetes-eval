@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  flask-adminator:
+    container_name: flask-adminator
+    restart: always
+    build: 'captnbill/eval-adminator:beta'
+    env_file: './flask-adminator/.env'
+  flask-light-bootstrap:
+    container_name: flask-light-bootstrap
+    restart: always
+    build: 'captnbill/eval-light:beta'
+    env_file: './flask-light-bootstrap/.env'
+  flask-material-dashboard:
+    container_name: flask-material-dashboard
+    restart: always
+    build: 'captnbill/eval-material:beta'
+    env_file: './flask-material-dashboard/.env'
+  flask-soft-ui-dashboard:
+    # container_name: flask-soft-ui-dashboard
+    restart: always
+    build: 'captnbill/eval-soft:beta'
+    env_file: './flask-soft-ui-dashboard/.env'
+    deploy:
+      replicas: 5
+  flask-volt-dashboard:
+    container_name: flask-volt-dashboard
+    restart: always
+    build: 'captnbill/eval-volt:beta'
+    env_file: './flask-volt-dashboard/.env'
+    ports:
+      - "8000:8000"
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:1.22.1-alpine-slim"
+    ports:
+      - "80:80"
+      - "5000:5000"
+      - "6000:6000"
+      - "7000:7000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on: 
+      - flask-adminator
+      - flask-light-bootstrap
+      - flask-material-dashboard
+      - flask-soft-ui-dashboard
+networks:
+  web_network:
+    driver: bridge
+  back_network:
+    driver: bridge
